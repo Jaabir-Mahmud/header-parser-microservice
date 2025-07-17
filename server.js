@@ -9,12 +9,17 @@ app.get('/', (req, res) => {
 });
 
 app.get('/api/whoami', (req, res) => {
+  const ip = req.headers['x-forwarded-for']?.split(',')[0] || req.socket.remoteAddress;
+  const language = req.headers['accept-language'];
+  const software = req.get('User-Agent'); // ✅ use req.get() instead of req.headers
+
   res.json({
-    ipaddress: req.headers['x-forwarded-for']?.split(',')[0] || req.socket.remoteAddress,
-    language: req.headers['accept-language'],
-    software: req.headers['user-agent']
+    ipaddress: ip,
+    language: language,
+    software: software
   });
 });
+
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
